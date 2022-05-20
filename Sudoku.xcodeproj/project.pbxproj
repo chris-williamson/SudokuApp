@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		655BCE082837B7C900551A56 /* BoxBordersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655BCE072837B7C900551A56 /* BoxBordersView.swift */; };
+		655BCE0A2837B81A00551A56 /* GridCellsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655BCE092837B81A00551A56 /* GridCellsView.swift */; };
+		655BCE0C2837B8F900551A56 /* KeypadInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655BCE0B2837B8F900551A56 /* KeypadInputView.swift */; };
 		83D94C7D2832E3BF004DEF3F /* SudokuApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83D94C7C2832E3BF004DEF3F /* SudokuApp.swift */; };
 		83D94C7F2832E3BF004DEF3F /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83D94C7E2832E3BF004DEF3F /* ContentView.swift */; };
 		83D94C812832E3C3004DEF3F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 83D94C802832E3C3004DEF3F /* Assets.xcassets */; };
@@ -35,6 +38,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		655BCE072837B7C900551A56 /* BoxBordersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoxBordersView.swift; sourceTree = "<group>"; };
+		655BCE092837B81A00551A56 /* GridCellsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridCellsView.swift; sourceTree = "<group>"; };
+		655BCE0B2837B8F900551A56 /* KeypadInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeypadInputView.swift; sourceTree = "<group>"; };
 		83D94C792832E3BF004DEF3F /* Sudoku.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Sudoku.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		83D94C7C2832E3BF004DEF3F /* SudokuApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SudokuApp.swift; sourceTree = "<group>"; };
 		83D94C7E2832E3BF004DEF3F /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -134,6 +140,9 @@
 			isa = PBXGroup;
 			children = (
 				83D94CA72832E41A004DEF3F /* CellView.swift */,
+				655BCE072837B7C900551A56 /* BoxBordersView.swift */,
+				655BCE092837B81A00551A56 /* GridCellsView.swift */,
+				655BCE0B2837B8F900551A56 /* KeypadInputView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -268,8 +277,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				655BCE082837B7C900551A56 /* BoxBordersView.swift in Sources */,
 				83D94C7F2832E3BF004DEF3F /* ContentView.swift in Sources */,
 				83D94C7D2832E3BF004DEF3F /* SudokuApp.swift in Sources */,
+				655BCE0C2837B8F900551A56 /* KeypadInputView.swift in Sources */,
+				655BCE0A2837B81A00551A56 /* GridCellsView.swift in Sources */,
 				83D94CA82832E41A004DEF3F /* CellView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -12,8 +12,25 @@ struct Cell {
     var markers: Set<Int>
 }
 
+enum CellState {
+    case invalid
+    case complete
+    case incomplete
+    case selected
+
+    var fillColor: Color {
+        switch self {
+        case .invalid: return .red
+        case .complete: return .green
+        case .incomplete: return .clear
+        case .selected: return .yellow
+        }
+    }
+}
+
 struct CellView: View {
     let cell: Cell
+    let state: CellState
     
     private let threeColumnGrid = [
         GridItem(.flexible(minimum: 0, maximum: .infinity)),
@@ -50,27 +67,28 @@ struct CellView: View {
                 }
                 .padding(EdgeInsets(top: padding, leading: padding, bottom: padding, trailing: padding))
             }
+            .background(state.fillColor)
         }
     }
 }
 
-struct Cell_Previews: PreviewProvider {
-    static let width: CGFloat = 100
-    static let padding: CGFloat = 5
-    
-    static var previews: some View {
-        VStack {
-            HStack(spacing: 0) {
-                CellView(cell: Cell(entry: nil, markers: [1, 2, 3, 4, 5, 6, 7, 8, 9]))
-                    .frame(width: width, height: width)
-//                    .border(.black)
-                CellView(cell: Cell(entry: nil, markers: [2, 5, 8]))
-                    .frame(width: width, height: width)
-//                    .border(.black)
-                CellView(cell: Cell(entry: 9, markers: [2, 5, 8]))
-                    .frame(width: width, height: width)
-//                    .border(.black)
-            }
-        }
-    }
-}
+//struct Cell_Previews: PreviewProvider {
+//    static let width: CGFloat = 100
+//    static let padding: CGFloat = 5
+//    
+//    static var previews: some View {
+//        VStack {
+//            HStack(spacing: 0) {
+//                CellView(cell: Cell(entry: nil, markers: [1, 2, 3, 4, 5, 6, 7, 8, 9]))
+//                    .frame(width: width, height: width)
+////                    .border(.black)
+//                CellView(cell: Cell(entry: nil, markers: [2, 5, 8]))
+//                    .frame(width: width, height: width)
+////                    .border(.black)
+//                CellView(cell: Cell(entry: 9, markers: [2, 5, 8]))
+//                    .frame(width: width, height: width)
+////                    .border(.black)
+//            }
+//        }
+//    }
+//}

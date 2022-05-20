@@ -7,10 +7,11 @@
 
 import SwiftUI
 
+typealias CellIndex = (x: Int, y: Int)
+
 struct ContentView: View {
     @State var cells: [[Cell]]
-    @State var selectedCellIndex: (x: Int, y: Int)? = nil
-    let entryGridColumns: [GridItem] = Array(repeating: .init(.fixed(40)), count: 3)
+    @State var selectedCellIndex: CellIndex? = nil
 
     var body: some View {
         GeometryReader { geo in
@@ -18,89 +19,26 @@ struct ContentView: View {
             VStack {
                 ZStack {
                     // Cells
-                    VStack(spacing: 0) {
-                        ForEach(0..<9) { y in
-                            let row = getRow(at: y)
-                            let invalidRow = isHouseInvalid(row)
-                            let completeRow = isHouseComplete(row)
-                            HStack(spacing: 0) {
-                                ForEach(0..<9) { x in
-                                    let column = getColumn(at: x)
-                                    let box = getBox(at: (x, y))
-
-                                    let invalidColumn = isHouseInvalid(column)
-                                    let invalidBox = isHouseInvalid(box)
-
-                                    let completeColumn = isHouseComplete(column)
-                                    let completeBox = isHouseComplete(box)
-
-                                    let isComplete = completeRow || completeColumn || completeBox
-                                    let isInvalid = invalidRow || invalidColumn || invalidBox
-                                    let isSelected = (x, y) == selectedCellIndex ?? (10, 10)
-
-                                    let fillColor: Color = isSelected ? .yellow : isComplete ? .green : isInvalid ? .red : .clear
-
-                                    ZStack {
-                                        Rectangle().fill(fillColor)
-
-                                        CellView(cell: cells[y][x])
-                                            .onTapGesture {
-                                                selectedCellIndex = (x, y)
-                                            }
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    GridCellsView(cells: cells, getState: getStateForCell(at:), selectedIndex: $selectedCellIndex)
 
                     // Box borders
-                    VStack(spacing: 0) {
-                        ForEach(0..<3) { _ in
-                            HStack(spacing: 0) {
-                                ForEach(0..<3) { _ in
-                                    Rectangle().strokeBorder(.black, lineWidth: 1).frame(width: width/3, height: width/3)
-                                }
-                            }
-                        }
-                    }
+                    BoxBordersView(boxWidth: width/3)
                 }
                 .frame(width: geo.size.width, height: geo.size.width)
                 .border(.black, width: 2)
 
                 HStack {
-                    VStack {
-                        Text("Entry").font(.title)
-                        LazyVGrid(columns: entryGridColumns) {
-                            ForEach(1..<10) { number in
-                                Button {
-                                    print("\(number) pressed")
-                                    if let selectedCellIndex = selectedCellIndex {
-                                        cells[selectedCellIndex.y][selectedCellIndex.x].entry = number
-                                    }
-                                } label: {
-                                    Text(String(number)).font(.title).frame(width: 40, height: 40)
-                                }
-
-                            }
-                        }
+                    KeypadInputView(title: "Entry") { number in
+                        guard let index = selectedCellIndex else { return }
+                        cells[index.y][index.x].entry = number
                     }
-                    VStack {
-                        Text("Markers").font(.title)
-                        LazyVGrid(columns: entryGridColumns) {
-                            ForEach(1..<10) { number in
-                                Button {
-                                    guard let index = selectedCellIndex else { return }
-                                    if cells[index.y][index.x].markers.contains(number) {
-                                        cells[index.y][index.x].markers.remove(number)
-                                    } else {
-                                        cells[index.y][index.x].markers.insert(number)
-                                    }
-
-                                } label: {
-                                    Text(String(number)).font(.title).frame(width: 40, height: 40)
-                                }
-
-                            }
+                    KeypadInputView(title: "Markers") { number in
+                        guard let index = selectedCellIndex else { return }
+                        let markers = cells[index.y][index.x].markers
+                        if markers.contains(number) {
+                            cells[index.y][index.x].markers.remove(number)
+                        } else {
+                            cells[index.y][index.x].markers.insert(number)
                         }
                     }
                 }
@@ -117,6 +55,29 @@ struct ContentView: View {
     }
 }
 
+// MARK: State
+extension ContentView {
+    private func getStateForCell(at index: CellIndex) -> CellState {
+        if (index.x, index.y) == selectedCellIndex ?? (10, 10) { return .selected }
+
+        let row = getRow(at: index.y)
+        let column = getColumn(at: index.x)
+        let box = getBox(at: (index.x, index.y))
+
+        let completeColumn = isHouseComplete(column)
+        let completeBox = isHouseComplete(box)
+        let completeRow = isHouseComplete(row)
+        if completeColumn || completeBox || completeRow { return .complete }
+
+        let invalidColumn = isHouseInvalid(column)
+        let invalidBox = isHouseInvalid(box)
+        let invalidRow = isHouseInvalid(row)
+        if invalidColumn || invalidBox || invalidRow { return .invalid }
+
+        return .incomplete
+    }
+}
+
 // MARK: Sudoku logic
 extension ContentView {
     private func getRow(at index: Int) -> [Int?] {
@@ -127,7 +88,7 @@ extension ContentView {
         cells.map({ $0[index].entry })
     }
 
-    private func getBox(at index: (x: Int, y: Int)) -> [Int?] {
+    private func getBox(at index: CellIndex) -> [Int?] {
         let yRange = [(0..<3), (3..<6), (6..<9)].first(where: { $0.contains(index.y) })!
         let xRange = [(0..<3), (3..<6), (6..<9)].first(where: { $0.contains(index.x) })!
         var boxEntries: [Int?] = []
